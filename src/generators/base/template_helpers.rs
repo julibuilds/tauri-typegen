@@ -282,6 +282,7 @@ impl TemplateHelpers {
                 validator_attributes: None,
                 // For command parameters (not struct fields), use camelCase by default
                 serialized_name: Some(Self::to_camel_case(&param.name)),
+                type_structure: param.type_structure.clone(),
             })
             .collect();
 
@@ -318,6 +319,7 @@ impl TemplateHelpers {
                 validator_attributes: None,
                 // For command parameters (not struct fields), use camelCase by default
                 serialized_name: Some(Self::to_camel_case(&param.name)),
+                type_structure: param.type_structure.clone(),
             })
             .collect();
 
@@ -333,6 +335,8 @@ impl TemplateHelpers {
                 validator_attributes: None,
                 // For channel parameters, use camelCase by default
                 serialized_name: Some(Self::to_camel_case(&param_name)),
+                // Channels are custom types from @tauri-apps/api/core
+                type_structure: crate::models::TypeStructure::Custom("Channel".to_string()),
             });
         }
 
