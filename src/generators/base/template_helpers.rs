@@ -23,9 +23,7 @@ impl TemplateHelpers {
             // and falls back to the field name
             result.push_str(&format!(
                 "  {}{}: {};\n",
-                field.get_serialized_name(),
-                optional_marker,
-                field.typescript_type
+                field.serialized_name, optional_marker, field.typescript_type
             ));
         }
 
@@ -281,7 +279,7 @@ impl TemplateHelpers {
                 is_public: true,
                 validator_attributes: None,
                 // For command parameters (not struct fields), use camelCase by default
-                serialized_name: Some(Self::to_camel_case(&param.name)),
+                serialized_name: Self::to_camel_case(&param.name),
                 type_structure: param.type_structure.clone(),
             })
             .collect();
@@ -318,7 +316,7 @@ impl TemplateHelpers {
                 is_public: true,
                 validator_attributes: None,
                 // For command parameters (not struct fields), use camelCase by default
-                serialized_name: Some(Self::to_camel_case(&param.name)),
+                serialized_name: Self::to_camel_case(&param.name),
                 type_structure: param.type_structure.clone(),
             })
             .collect();
@@ -334,7 +332,7 @@ impl TemplateHelpers {
                 is_public: true,
                 validator_attributes: None,
                 // For channel parameters, use camelCase by default
-                serialized_name: Some(Self::to_camel_case(&param_name)),
+                serialized_name: Self::to_camel_case(&param_name),
                 // Channels are custom types from @tauri-apps/api/core
                 type_structure: crate::models::TypeStructure::Custom("Channel".to_string()),
             });
