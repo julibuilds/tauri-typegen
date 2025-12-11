@@ -59,7 +59,7 @@ pub fn generate_from_config(
                 let optional = if field.is_optional { "?" } else { "" };
                 logger.verbose(&format!(
                     "    • {}{}: {} ({})",
-                    field.name, optional, field.typescript_type, visibility
+                    field.name, optional, field.rust_type, visibility
                 ));
             }
         }
