@@ -1,7 +1,7 @@
 [package]
 name = "tauri-typegen"
 version = "0.3.4"
-authors = [ "Stefan Poindl" ]
+authors = ["Stefan Poindl"]
 description = "A rust crate that automatically generates TypeScript models and bindings from your Tauri commands"
 edition = "2021"
 rust-version = "1.77.2"
@@ -10,17 +10,17 @@ links = "tauri-typegen"
 license = "MIT"
 
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-thiserror = "2"
-syn = { version = "2.0.106", features = ["full", "extra-traits"] }
-quote = "1.0"
-proc-macro2 = {  version = "1.0", features = ["span-locations"] }
-walkdir = "2.0"
-regex = "1.0"
-clap = { version = "4.0", features = ["derive"] }
-chrono = { version = "0.4", features = ["serde"] }
-indicatif = "0.17"
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+chrono.workspace = true
+syn = { version = "2.0.111", features = ["full", "extra-traits"] }
+quote = "1.0.42"
+proc-macro2 = { version = "1.0.103", features = ["span-locations"] }
+walkdir = "2.5.0"
+regex = "1.12.2"
+clap = { version = "4.5.53", features = ["derive"] }
+indicatif = "0.18.3"
 
 [[bin]]
 name = "cargo-tauri-typegen"
@@ -31,11 +31,6 @@ default = []
 build-time-generation = []
 
 [dev-dependencies]
-tokio = { version = "1.0", features = ["macros", "rt"] }
-tempfile = "3.0"
-serial_test = "3.0"
-
-[dev-dependencies.cargo-husky]
-version = "1"
-default-features = false
-features = ["user-hooks"]
+tokio = { version = "1.48.0", features = ["macros", "rt"] }
+tempfile = "3.23.0"
+serial_test = "3.2.0"
