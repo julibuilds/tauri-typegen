@@ -158,8 +158,13 @@ impl TypeConverter {
             .to_string()
     }
 
-    /// Check if a Rust type is a primitive type
+    /// Check if a Rust type is a primitive type (maps directly to TypeScript)
     pub fn is_primitive_type(&self, type_str: &str) -> bool {
+        // Check for DateTime<T> pattern
+        if type_str.starts_with("DateTime<") && type_str.ends_with('>') {
+            return true;
+        }
+
         matches!(
             type_str,
             "String"
@@ -187,17 +192,49 @@ impl TypeConverter {
                 | "boolean"
                 | "void"
                 | "unknown"
+                // Path types
+                | "PathBuf"
+                | "Path"
+                | "OsString"
+                | "OsStr"
+                // UUID types
+                | "Uuid"
+                | "Ulid"
+                // Date/time types
+                | "NaiveDateTime"
+                | "NaiveDate"
+                | "NaiveTime"
+                | "Duration"
+                // Special types
+                | "Value"
+                | "Bytes"
         )
     }
 
     /// Map primitive Rust types to TypeScript types
     pub fn map_primitive_type(&self, rust_type: &str) -> Option<String> {
+        // Handle DateTime<T> pattern
+        if rust_type.starts_with("DateTime<") && rust_type.ends_with('>') {
+            return Some("string".to_string());
+        }
+
         match rust_type {
             "String" | "str" | "&str" | "&String" => Some("string".to_string()),
             "i8" | "i16" | "i32" | "i64" | "i128" | "isize" | "u8" | "u16" | "u32" | "u64"
             | "u128" | "usize" | "f32" | "f64" => Some("number".to_string()),
             "bool" => Some("boolean".to_string()),
             "()" => Some("void".to_string()),
+            // Path types - serialize as strings
+            "PathBuf" | "Path" | "OsString" | "OsStr" => Some("string".to_string()),
+            // UUID types - serialize as strings
+            "Uuid" | "Ulid" => Some("string".to_string()),
+            // Date/time types - serialize as strings
+            "NaiveDateTime" | "NaiveDate" | "NaiveTime" => Some("string".to_string()),
+            // Duration serializes as number (seconds or milliseconds depending on config)
+            "Duration" => Some("number".to_string()),
+            // Special types
+            "Value" => Some("unknown".to_string()),
+            "Bytes" => Some("Uint8Array".to_string()),
             _ => None,
         }
     }

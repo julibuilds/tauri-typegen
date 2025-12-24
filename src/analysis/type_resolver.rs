@@ -37,11 +37,38 @@ impl TypeResolver {
         type_mappings.insert("HashSet".to_string(), "Set".to_string());
         type_mappings.insert("BTreeSet".to_string(), "Set".to_string());
 
+        // Path types - serialize as strings
+        type_mappings.insert("PathBuf".to_string(), "string".to_string());
+        type_mappings.insert("Path".to_string(), "string".to_string());
+        type_mappings.insert("OsString".to_string(), "string".to_string());
+        type_mappings.insert("OsStr".to_string(), "string".to_string());
+
+        // UUID types - serialize as strings
+        type_mappings.insert("Uuid".to_string(), "string".to_string());
+        type_mappings.insert("Ulid".to_string(), "string".to_string());
+
+        // Duration types
+        type_mappings.insert("Duration".to_string(), "number".to_string());
+
+        // Special serialization types
+        type_mappings.insert("Value".to_string(), "unknown".to_string()); // serde_json::Value
+        type_mappings.insert("Bytes".to_string(), "Uint8Array".to_string());
+
         Self { type_mappings }
     }
 
     /// Map a Rust type string to TypeScript type string
     pub fn map_rust_type_to_typescript(&mut self, rust_type: &str) -> String {
+        // Handle DateTime<T> -> string (chrono DateTime serializes as ISO 8601 string)
+        if rust_type.starts_with("DateTime<") && rust_type.ends_with('>') {
+            return "string".to_string();
+        }
+
+        // Handle NaiveDateTime, NaiveDate, NaiveTime -> string
+        if rust_type == "NaiveDateTime" || rust_type == "NaiveDate" || rust_type == "NaiveTime" {
+            return "string".to_string();
+        }
+
         // Handle Option<T> -> T | null
         if let Some(inner_type) = self.extract_option_inner_type(rust_type) {
             let mapped_inner = self.map_rust_type_to_typescript(&inner_type);
